@@ -1,18 +1,18 @@
-# Ö¸¶¨ÎÄ¼ş¼ĞÂ·¾¶
-$musicFolderPath = "H:\B3313 OST\mp3s"
-$videosFolderPath = "H:\B3313 OST\output"
-$outputListPath = "H:\B3313 OST\video_list.txt"
+# æŒ‡å®šæ–‡ä»¶å¤¹è·¯å¾„
+$musicFolderPath = "H:\"
+$videosFolderPath = "H:\"
+$outputListPath = "H:\video_list.txt"
 
-# »ñÈ¡ËùÓĞÒôÀÖÎÄ¼ş
+# è·å–æ‰€æœ‰éŸ³ä¹æ–‡ä»¶
 $musicFiles = Get-ChildItem -Path $musicFolderPath -Filter *.mp3
 
-# Ê¹ÓÃµ¥Ò»Í¼Æ¬
-$imageFile = "H:\B3313 OST\img\123.jpg" # Ìæ»»ÎªÄãµÄÍ¼Æ¬ÎÄ¼şÂ·¾¶
+# ä½¿ç”¨å•ä¸€å›¾ç‰‡
+$imageFile = "H:\B3313 OST\img\123.jpg" # æ›¿æ¢ä¸ºä½ çš„å›¾ç‰‡æ–‡ä»¶è·¯å¾„
 
-# ³õÊ¼»¯ÊÓÆµ±àºÅ
+# åˆå§‹åŒ–è§†é¢‘ç¼–å·
 $counter = 1
 
-# Çå¿Õ»ò´´½¨ÊÓÆµÁĞ±íÎÄ¼ş
+# æ¸…ç©ºæˆ–åˆ›å»ºè§†é¢‘åˆ—è¡¨æ–‡ä»¶
 if (Test-Path $outputListPath) {
     Clear-Content $outputListPath
 } else {
@@ -23,19 +23,19 @@ foreach ($musicFile in $musicFiles) {
     $baseName = [IO.Path]::GetFileNameWithoutExtension($musicFile.Name)
     $videoFile = Join-Path $videosFolderPath "$baseName.mp4"
 
-    # µ÷ÓÃFFmpeg½øĞĞÊÓÆµºÏ³É
+    # è°ƒç”¨FFmpegè¿›è¡Œè§†é¢‘åˆæˆ
     & ffmpeg -loop 1 -framerate 2 -i $imageFile -i $musicFile.FullName `
          -vf "drawtext=text='$baseName':x=10:y=H-th-10:fontcolor=white:fontsize=24, `
               drawtext=text='$counter':x=10:y=10:fontcolor=white:fontsize=24" `
          -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p `
          -shortest $videoFile -y
 
-    # ½«ÊÓÆµ±àºÅºÍÃû³ÆÌí¼Óµ½ÁĞ±íÎÄ¼ş
+    # å°†è§†é¢‘ç¼–å·å’Œåç§°æ·»åŠ åˆ°åˆ—è¡¨æ–‡ä»¶
     "${counter}: $baseName" | Out-File -Append $outputListPath
 
-    # Ôö¼ÓÊÓÆµ±àºÅ
+    # å¢åŠ è§†é¢‘ç¼–å·
     $counter++
 }
 
-# ½Å±¾Íê³É
+# è„šæœ¬å®Œæˆ
 Write-Host "Videos have been created and listed in $outputListPath"
